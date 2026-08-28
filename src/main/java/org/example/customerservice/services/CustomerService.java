@@ -1,5 +1,6 @@
 package org.example.customerservice.services;
 
+import org.aspectj.weaver.patterns.ThisOrTargetAnnotationPointcut;
 import org.example.customerservice.dto.CustomerDTO;
 import org.example.customerservice.entity.CustomerEntity;
 import org.example.customerservice.repositories.CustomerRepository;
@@ -16,20 +17,24 @@ public class CustomerService {
         this.customerRepository = customerRepository;
     }
 
-    public List<CustomerEntity> getAllCustomers() {
-        return customerRepository.findAll();
+    public List<CustomerDTO> getAllCustomers() {
+        return customerRepository
+                .findAll()
+                .stream()
+                .map(this::toDto)
+                .toList();
     }
 
-    public CustomerEntity getCustomerById(Long id) {
-        return customerRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Kunden hittades inte"));
+    public CustomerDTO getCustomerById(Long id) {
+        return toDto(customerRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Kunden hittades inte")));
     }
 
     public void deleteCustomer(Long id) {
         customerRepository.deleteById(id);
     }
 
-    public CustomerEntity updateCustomer(CustomerDTO customerToUpdate) {
+    public CustomerDTO updateCustomer(CustomerDTO customerToUpdate) {
 
         CustomerEntity customer = customerRepository.findById(customerToUpdate.getId())
                 .orElseThrow(() ->
@@ -39,10 +44,19 @@ public class CustomerService {
         customer.setEmail(customerToUpdate.getEmail());
         customer.setTel(customerToUpdate.getTel());
 
-        return customerRepository.save(customer);
+        return toDto(customerRepository.save(customer));
     }
 
-    public CustomerEntity createCustomer(CustomerDTO customerDTO) {
+    public CustomerDTO toDto(CustomerEntity customerEntity) {
+        CustomerDTO customerDTO = new CustomerDTO();
+        customerDTO.setId(customerEntity.getId());
+        customerDTO.setName(customerEntity.getName());
+        customerDTO.setEmail(customerEntity.getEmail());
+        customerDTO.setTel(customerEntity.getTel());
+        return customerDTO;
+    }
+
+    public CustomerDTO createCustomer(CustomerDTO customerDTO) {
 
         CustomerEntity customer = new CustomerEntity();
 
@@ -50,7 +64,7 @@ public class CustomerService {
         customer.setEmail(customerDTO.getEmail());
         customer.setTel(customerDTO.getTel());
 
-        return customerRepository.save(customer);
+        return toDto(customerRepository.save(customer));
     }
 
 

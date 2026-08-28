@@ -19,12 +19,12 @@ public class CustomerController {
     }
 
     @GetMapping
-    public List<CustomerEntity> getAllCustomers() {
+    public List<CustomerDTO> getAllCustomers() {
         return customerService.getAllCustomers();
     }
 
     @GetMapping("/{id}")
-    public CustomerEntity getCustomerById(@PathVariable Long id) {
+    public CustomerDTO getCustomerById(@PathVariable Long id) {
         return customerService.getCustomerById(id);
     }
 
@@ -34,12 +34,12 @@ public class CustomerController {
     }
 
     @PutMapping
-    public CustomerEntity updateCustomer(@RequestBody CustomerDTO customerToUpdate) {
+    public CustomerDTO updateCustomer(@RequestBody CustomerDTO customerToUpdate) {
         return customerService.updateCustomer(customerToUpdate);
     }
 
     @PostMapping
-    public CustomerEntity createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
+    public CustomerDTO createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
         return customerService.createCustomer(customerDTO);
     }
 }
