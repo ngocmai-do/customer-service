@@ -18,7 +18,7 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping
+    @GetMapping("/all")
     public List<CustomerEntity> getAllCustomers() {
         return customerService.getAllCustomers();
     }
