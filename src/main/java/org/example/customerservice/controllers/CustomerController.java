@@ -2,8 +2,8 @@ package org.example.customerservice.controllers;
 
 import jakarta.validation.Valid;
 import org.example.customerservice.dto.CustomerDTO;
-import org.example.customerservice.entity.CustomerEntity;
 import org.example.customerservice.services.CustomerService;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,27 +19,28 @@ public class CustomerController {
     }
 
     @GetMapping("/all")
-    public List<CustomerEntity> getAllCustomers() {
-        return customerService.getAllCustomers();
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+        return ResponseEntity.ok(customerService.getAllCustomers()); // 200
     }
 
     @GetMapping("/{id}")
-    public CustomerEntity getCustomerById(@PathVariable Long id) {
-        return customerService.getCustomerById(id);
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long id) {
+        return ResponseEntity.ok(customerService.getCustomerById(id)); // 200
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCustomer(@PathVariable Long id) {
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
         customerService.deleteCustomer(id);
+        return ResponseEntity.noContent().build(); // 204
     }
 
     @PutMapping
-    public CustomerEntity updateCustomer(@RequestBody CustomerDTO customerToUpdate) {
-        return customerService.updateCustomer(customerToUpdate);
+    public ResponseEntity<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customerToUpdate) {
+        return ResponseEntity.ok(customerService.updateCustomer(customerToUpdate)); // 200
     }
 
     @PostMapping
-    public CustomerEntity createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
-        return customerService.createCustomer(customerDTO);
+    public ResponseEntity<CustomerDTO> createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
+        return ResponseEntity.status(201).body(customerService.createCustomer(customerDTO)); // 201
     }
 }
