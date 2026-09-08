@@ -3,6 +3,7 @@ package org.example.customerservice.controllers;
 import jakarta.validation.Valid;
 import org.example.customerservice.dto.CustomerDTO;
 import org.example.customerservice.services.CustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -30,8 +31,12 @@ public class CustomerController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
-        customerService.deleteCustomer(id);
-        return ResponseEntity.noContent().build(); // 204
+        boolean deleted = customerService.deleteCustomer(id);
+
+        if (!deleted) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409 - has bookings
+        }
+        return ResponseEntity.noContent().build(); // 204 - deleted successfully
     }
 
     @PutMapping

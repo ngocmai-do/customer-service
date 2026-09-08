@@ -5,6 +5,7 @@ import org.example.customerservice.dto.CustomerDTO;
 import org.example.customerservice.entity.CustomerEntity;
 import org.example.customerservice.repositories.CustomerRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.List;
 
@@ -12,6 +13,9 @@ import java.util.List;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+
+    private final RestTemplate restTemplate = new RestTemplate();
+
 
     public CustomerService(CustomerRepository customerRepository) {
         this.customerRepository = customerRepository;
@@ -30,8 +34,21 @@ public class CustomerService {
                 .orElseThrow(() -> new IllegalArgumentException("Kunden hittades inte")));
     }
 
-    public void deleteCustomer(Long id) {
+    public boolean deleteCustomer(Long id) {
+        boolean hasBookings = customerHasBookings(id);
+        if (hasBookings) {
+            return false;
+        }
         customerRepository.deleteById(id);
+        return true;
+    }
+
+    private boolean customerHasBookings(Long customerId) {
+        Boolean exists = restTemplate.getForObject(
+                "http://bookingservice:8080/booking/customer/" + customerId + "/exists",
+                Boolean.class
+        );
+        return Boolean.TRUE.equals(exists);
     }
 
     public CustomerDTO updateCustomer(CustomerDTO customerToUpdate) {
