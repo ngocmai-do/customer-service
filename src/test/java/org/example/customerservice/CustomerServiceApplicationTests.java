@@ -86,7 +86,7 @@ class CustomerServiceApplicationTests {
                 )
         );
 
-        mvc.perform(get("/customers"))
+        mvc.perform(get("/customers/all"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(2)))
                 .andExpect(jsonPath("$[0].name").value("Anna Andersson"))

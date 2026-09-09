@@ -51,7 +51,3 @@ public class CustomerController {
     }
 
 }
-    public ResponseEntity<CustomerDTO> createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
-        return ResponseEntity.status(201).body(customerService.createCustomer(customerDTO)); // 201
-    }
-}
