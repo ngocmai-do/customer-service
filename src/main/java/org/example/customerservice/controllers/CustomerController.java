@@ -45,6 +45,12 @@ public class CustomerController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
+    public CustomerDTO createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
+        return customerService.createCustomer(customerDTO);
+    }
+
+}
     public ResponseEntity<CustomerDTO> createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
         return ResponseEntity.status(201).body(customerService.createCustomer(customerDTO)); // 201
     }
