@@ -4,6 +4,7 @@ import jakarta.validation.Valid;
 import org.example.customerservice.dto.CustomerDTO;
 import org.example.customerservice.entity.CustomerEntity;
 import org.example.customerservice.services.CustomerService;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -39,7 +40,9 @@ public class CustomerController {
     }
 
     @PostMapping
+    @ResponseStatus(HttpStatus.CREATED)
     public CustomerDTO createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
         return customerService.createCustomer(customerDTO);
     }
+
 }
