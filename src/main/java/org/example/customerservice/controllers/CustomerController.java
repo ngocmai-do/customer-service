@@ -2,9 +2,9 @@ package org.example.customerservice.controllers;
 
 import jakarta.validation.Valid;
 import org.example.customerservice.dto.CustomerDTO;
-import org.example.customerservice.entity.CustomerEntity;
 import org.example.customerservice.services.CustomerService;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,24 +19,29 @@ public class CustomerController {
         this.customerService = customerService;
     }
 
-    @GetMapping
-    public List<CustomerDTO> getAllCustomers() {
-        return customerService.getAllCustomers();
+    @GetMapping("/all")
+    public ResponseEntity<List<CustomerDTO>> getAllCustomers() {
+        return ResponseEntity.ok(customerService.getAllCustomers()); // 200
     }
 
     @GetMapping("/{id}")
-    public CustomerDTO getCustomerById(@PathVariable Long id) {
-        return customerService.getCustomerById(id);
+    public ResponseEntity<CustomerDTO> getCustomerById(@PathVariable Long id) {
+        return ResponseEntity.ok(customerService.getCustomerById(id)); // 200
     }
 
     @DeleteMapping("/{id}")
-    public void deleteCustomer(@PathVariable Long id) {
-        customerService.deleteCustomer(id);
+    public ResponseEntity<Void> deleteCustomer(@PathVariable Long id) {
+        boolean deleted = customerService.deleteCustomer(id);
+
+        if (!deleted) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).build(); // 409 - has bookings
+        }
+        return ResponseEntity.noContent().build(); // 204 - deleted successfully
     }
 
     @PutMapping
-    public CustomerDTO updateCustomer(@RequestBody CustomerDTO customerToUpdate) {
-        return customerService.updateCustomer(customerToUpdate);
+    public ResponseEntity<CustomerDTO> updateCustomer(@RequestBody CustomerDTO customerToUpdate) {
+        return ResponseEntity.ok(customerService.updateCustomer(customerToUpdate)); // 200
     }
 
     @PostMapping
@@ -45,4 +50,8 @@ public class CustomerController {
         return customerService.createCustomer(customerDTO);
     }
 
+}
+    public ResponseEntity<CustomerDTO> createCustomer(@Valid @RequestBody CustomerDTO customerDTO) {
+        return ResponseEntity.status(201).body(customerService.createCustomer(customerDTO)); // 201
+    }
 }
