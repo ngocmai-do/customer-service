@@ -55,7 +55,7 @@ public class CustomerCreationIntegrationTest {
     void createCustomer_invalidEmail_returns400() throws Exception {
         String customerJson = """
                 {
-                    "name": "Maiiii",
+                    "name": "Mai",
                     "email": "not-an-email",
                     "tel": "0701234567"
                 }
