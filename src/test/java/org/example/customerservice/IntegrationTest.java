@@ -34,7 +34,7 @@ public class IntegrationTest {
 
 
         assertEquals(1, customers.size());
-        assertEquals("Maiiii", customers.get(0).getName());
+        assertEquals("Mai", customers.get(0).getName());
     }
 
 }
